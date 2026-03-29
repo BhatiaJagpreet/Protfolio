@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Jagpreet Singh Bhatia</title>
+    <meta name="description"
+        content="Get in touch with Jagpreet Singh Bhatia — Frontend & AI Product Engineer based in Mumbai, India.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/jpeg" href="images/profile.jpg">
+</head>
+
+<body data-page="contact">
+
+    <div class="page-wrapper">
+        <div class="container">
+
+            <!-- Breadcrumb -->
+            <div class="breadcrumb fade-in">
+                <a href="index.html">Home</a>
+                <span class="breadcrumb-sep">/</span>
+                <span>Contact</span>
+            </div>
+
+            <!-- Page Header -->
+            <div class="exp-header fade-in">
+                <h1 class="page-title">Get in Touch</h1>
+                <p class="page-subtitle">Interested in working together or have a question? Feel free to reach out.</p>
+            </div>
+
+            <section class="section">
+                <div class="contact-grid">
+
+                    <!-- Contact Info -->
+                    <div class="contact-info fade-in">
+                        <a href="https://www.linkedin.com/in/jagpreet-singh-bhatia/" target="_blank" rel="noopener"
+                            class="contact-card">
+                            <div class="contact-icon">💼</div>
+                            <div>
+                                <h3>LinkedIn</h3>
+                                <p>linkedin.com/in/jagpreet-singh-bhatia</p>
+                            </div>
+                        </a>
+
+                        <a href="mailto:jagpreetsinghbhatia6@gmail.com" class="contact-card">
+                            <div class="contact-icon">📧</div>
+                            <div>
+                                <h3>Email</h3>
+                                <p>jagpreetsinghbhatia6@gmail.com</p>
+                            </div>
+                        </a>
+
+                        <div class="contact-card">
+                            <div class="contact-icon">📍</div>
+                            <div>
+                                <h3>Location</h3>
+                                <p>Mumbai, India</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-card">
+                            <div class="contact-icon">💼</div>
+                            <div>
+                                <h3>Current Role</h3>
+                                <p>Consultant — Expleo Group</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="contact-form fade-in fade-in-delay-1">
+                        <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1.5rem;">Send a Message</h3>
+                        <form id="contactForm" onsubmit="handleSubmit(event)">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" placeholder="Your name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <input type="text" id="subject" name="subject" placeholder="What's this about?">
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" placeholder="Your message..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
+                                Send Message →
+                            </button>
+                            <div id="form-status" class="form-status"></div>
+                        </form>
+
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        async function handleSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const btn = form.querySelector('button[type="submit"]');
+            const statusEl = document.getElementById('form-status');
+
+            // Disable + loading state
+            btn.disabled = true;
+            btn.innerHTML = '<span class="btn-spinner"></span> Sending...';
+            statusEl.className = 'form-status';
+            statusEl.textContent = '';
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value || 'New message from Portfolio';
+            const message = document.getElementById('message').value;
+
+            try {
+                const res = await fetch('https://formsubmit.co/ajax/jagpreetsinghbhatia6@gmail.com', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        _subject: subject,
+                        message: message,
+                        _template: 'table'
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    btn.innerHTML = '✓ Message Sent!';
+                    btn.style.background = 'linear-gradient(135deg, #34d399, #10b981)';
+                    statusEl.className = 'form-status form-status-success';
+                    statusEl.textContent = 'Your message has been sent successfully! I\'ll get back to you soon.';
+                    form.reset();
+                } else {
+                    throw new Error(data.message || 'Something went wrong');
+                }
+            } catch (err) {
+                btn.innerHTML = '✗ Failed to send';
+                btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+                statusEl.className = 'form-status form-status-error';
+                statusEl.textContent = 'Failed to send message. Please try emailing directly at jagpreetsinghbhatia6@gmail.com';
+            }
+
+            // Reset button after 4s
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = 'Send Message →';
+                btn.style.background = '';
+            }, 4000);
+        }
+    </script>
+</body>
+
+</html>
